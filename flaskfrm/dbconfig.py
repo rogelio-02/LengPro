@@ -1,11 +1,11 @@
 from app import app
-from flaskext.mysql import MySQL
+import pymysql
 
-mysql = MySQL()
- 
-# MySQL configurations
-app.config['MYSQL_DATABASE_USER'] = 'root'
-app.config['MYSQL_DATABASE_PASSWORD'] = 'apolo9404'
-app.config['MYSQL_DATABASE_DB'] = 'form'
-app.config['MYSQL_DATABASE_HOST'] = 'localhost'
-mysql.init_app(app)
+def getDBConnection():
+    connection = pymysql.connect(
+        host='127.0.0.1',         
+        user='root',    
+        password='apolo9404', 
+        database='form'  
+    )
+    return connection

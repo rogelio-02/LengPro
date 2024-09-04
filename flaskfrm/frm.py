@@ -1,45 +1,45 @@
-import pymysql
+from flask import Flask, render_template, request, redirect, url_for
 from app import app
-from dbconfig import mysql
-#from tables import Results
-from flask import flash, render_template, request, redirect
-from werkzeug.security import generate_password_hash, check_password_hash
+from dbconfig import getDBConnection
+import pymysql
 
-#app = Flask(__name__)
-#app.debug = True
 
-@app.route('/')
-def helloworld():
-    return render_template("frm.html") 
-    
-@app.route('/show', methods = ["POST","GET"])
-def show():
-    conn = None
-    cursor = None
+@app.route('/', methods=["GET"])
+def index():
+    connection = getDBConnection()
+    cursor = connection.cursor(pymysql.cursors.DictCursor)
+
     try:
-        if request.method == "POST":
-           nf = request.form['fn']
-           nl = request.form['ln']
-           print ("el nombre ", nf, " ", nl)
-           conn = mysql.connect()
-           cursor = conn.cursor(pymysql.cursors.DictCursor)
-           #sql = "insert into empleados(name, lname) values('%s', '%s')"
-           #sql = "DELETE FROM empleados WHERE name =  "VALOR"
-           
-           values = ( nf, nl,)
-
-           #cursor.execute(sql, values)
-           #conn.commit()
-           cursor.execute("SELECT * FROM  empleados")
-           rows = cursor.fetchall()
-           print (rows)
-           return render_template("out.html", f=nf, l=nl, productos = rows)
-    except Exception as e:
-       print(e)
+        cursor.execute("SELECT * FROM agenda")
+        contactos = cursor.fetchall()
+    except pymysql.MySQLError as e:
+        print(f"Error: {e}")
+        contactos = []
     finally:
-       cursor.close() 
-       conn.close()       
+        cursor.close()
+        connection.close()
+
+    return render_template('frm.html', contactos=contactos)
+
+@app.route('/', methods=['POST'])
+def submit():
+    firstName = request.form['name']
+    lastName = request.form['lname']
+    
+    connection = getDBConnection()
+    cursor = connection.cursor()
+
+    try:
+        cursor.execute("INSERT INTO agenda (nombre, apellido) VALUES (%s,%s)", (firstName, lastName))
+        connection.commit()
+    except pymysql.MySQLError as e:
+        print(f"Error: {e}")
+    finally:
+        cursor.close()
+        connection.close()
+
+    return redirect(url_for('index'))    
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     app.run()

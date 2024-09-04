@@ -1,11 +1,46 @@
+<!DOCTYPE html>
 <html>
-<body>
-<form action="/show" method="post">
-  <label>First name:</label><br>
-  <input type="text" name="fn"/><br>
-  <label>Last name:</label><br>
-  <input type="text"  name="ln"/>
-  <input type="submit" value="Submit"/>
-</form>
-</body>
+    <head>
+        <title>
+            Agenda
+        </title>
+    </head>
+
+    <body>
+
+        <h2>Agregar nuevo contacto:</h2>
+        <form action="/" method="post">
+            <label>Nombre:</label>
+            <input type="text" id="nombre" name="name"><br><br>
+            <label>Apellido:</label>
+            <input type="text" id="apellido" name="lname"><br><br>
+            <input type="submit" value="Agregar contacto">
+        </form>
+
+        <br><br>
+
+        <div>
+            <h3>Agenda de contactos:</h3>
+            <table border="1">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Nombre</th>
+                        <th>Apellido</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    {% for contacto in contactos %}
+                        <tr>
+                            <td>{{ contacto.idPersona }}</td>
+                            <td>{{ contacto.nombre }}</td>
+                            <td>{{ contacto.apellido }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+
+            </table>
+        </div>
+    </body>
 </html>
