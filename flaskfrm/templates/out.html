@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Editar Contacto</title>
+    </head>
+    <body>
+        <h2>Editar Contacto:</h2>
+        <form action="{{ url_for('edit_contact', id=contacto.idPersona) }}" method="post">
+            <label>Nombre:</label>
+            <input type="text" id="nombre" name="name" value="{{ contacto.nombre }}"><br><br>
+            <label>Apellido:</label>
+            <input type="text" id="apellido" name="lname" value="{{ contacto.apellido }}"><br><br>
+            <input type="submit" value="Guardar Cambios">
+        </form>
+        <br>
+        <a href="{{ url_for('index') }}">Cancelar</a>
+    </body>
+</html>
